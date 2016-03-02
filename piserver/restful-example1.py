@@ -48,7 +48,7 @@ def create_modules():
     modules.append(module)
     return jsonify({'module': module}), 201
 
-@app.route('/todo/api/v1.0/modules/<int:module_id>', methods=['PUT'])
+@app.route('/tlaloc/api/v1.0/modules/<int:module_id>', methods=['PUT'])
 def update_module(module_id):
     module = [module for module in modules if module['id'] == module_id]
     if len(module) == 0:
@@ -59,12 +59,12 @@ def update_module(module_id):
         abort(400)
     if 'seconds' in request.json and type(request.json['seconds']) is not int:
         abort(400)
-    if 'watered' in request.json and type(request.json['done']) is not bool:
+    if 'watered' in request.json and type(request.json['watered']) is not bool:
         abort(400)
-    module[module_id]['name'] = request.json.get('name', module[module_id]['name'])
-    module[module_id]['seconds'] = request.json.get('seconds', module[module_id]['seconds'])
-    module[module_id]['watered'] = request.json.get('watered', module[module_id]['watered'])
-    return jsonify({'module': module[module_id]})
+    module[module_id-1]['name'] = request.json.get('name', module[module_id-1]['name'])
+    module[module_id-1]['seconds'] = request.json.get('seconds', module[module_id-1]['seconds'])
+    module[module_id-1]['watered'] = request.json.get('watered', module[module_id-1]['watered'])
+    return jsonify({'module': module[module_id-1]})
 
 @app.route('/tlaloc/api/v1.0/modules/<int:module_id>', methods=['DELETE'])
 def delete_module(module_id):
