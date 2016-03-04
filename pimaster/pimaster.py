@@ -3,7 +3,9 @@ from flask import Flask, jsonify
 from flask import abort, request
 from flask import make_response
 
-app = Flask(__name__)
+##
+##define the data structure to hold slaves information and status
+##
 
 modules = [
     {
@@ -19,6 +21,17 @@ modules = [
         'watered': False
     }
 ]
+
+##
+##setup the radio communication
+##
+##TODO
+
+##
+##create the RESTful interface for remote control of slaves
+##
+
+app = Flask(__name__)
 
 @app.route('/tlaloc/api/v1.0/modules', methods=['GET'])
 def get_modules():
@@ -74,5 +87,24 @@ def delete_module(module_id):
     modules.remove(modules[module_id -1])
     return jsonify({'result': True})
 
+@app.route('/tlaloc/api/v1.0/modules/<int:module_id>/go', methods=['GET'])
+def go_module(module_id):
+  for module in modules:
+    if module['id'] == module_id:
+      ##prepare the communication with module module_id
+      ##TODO
+      ##prepare the command to send
+      ##send command to module module_id
+      print("Sending watering command to module " + str(module_id) + ": " + str(module['seconds']) + "s")
+      ##listen for confirmation
+      print("Waiting for confirmation until timeout")
+      received = True
+      if received:
+        return jsonify({'result': "OK"})
+      else:
+        return jsonify({'result': "Did not received slave confirmation"})
+  abort(404)
+
 if __name__ == '__main__':
     app.run(debug=True)
+
