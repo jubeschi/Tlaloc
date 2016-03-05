@@ -33,6 +33,10 @@ modules = [
 
 app = Flask(__name__)
 
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
 @app.route('/tlaloc/api/v1.0/modules', methods=['GET'])
 def get_modules():
     return jsonify({'modules': modules})
@@ -43,10 +47,6 @@ def get_module(module_id):
     if module['id'] == module_id:
       return jsonify({'module': module})
   abort(404)
-
-@app.errorhandler(404)
-def not_found(error):
-    return make_response(jsonify({'error': 'Not found'}), 404)
 
 @app.route('/tlaloc/api/v1.0/modules', methods=['POST'])
 def create_modules():
@@ -63,9 +63,8 @@ def create_modules():
 
 @app.route('/tlaloc/api/v1.0/modules/<int:module_id>', methods=['PUT'])
 def update_module(module_id):
-    module = [module for module in modules if module['id'] == module_id]
-    if len(module) == 0:
-        abort(404)
+    ##module = [module for module in modules if module['id'] == module_id]
+    ##do some validation on the input request
     if not request.json:
         abort(400)
     if 'name' in request.json and type(request.json['name']) != unicode:
@@ -74,10 +73,15 @@ def update_module(module_id):
         abort(400)
     if 'watered' in request.json and type(request.json['watered']) is not bool:
         abort(400)
-    module[module_id-1]['name'] = request.json.get('name', module[module_id-1]['name'])
-    module[module_id-1]['seconds'] = request.json.get('seconds', module[module_id-1]['seconds'])
-    module[module_id-1]['watered'] = request.json.get('watered', module[module_id-1]['watered'])
-    return jsonify({'module': module[module_id-1]})
+    ##OK, if we are it means the request is good enough
+    for module in modules:
+      if module['id'] == module_id:
+        module['name'] = request.json.get('name', module['name'])
+        module['seconds'] = request.json.get('seconds', module['seconds'])
+        module['watered'] = request.json.get('watered', module['watered'])
+        return jsonify({'module': module})
+    #If we are here the input id was not matched
+    abort(404)
 
 @app.route('/tlaloc/api/v1.0/modules/<int:module_id>', methods=['DELETE'])
 def delete_module(module_id):
