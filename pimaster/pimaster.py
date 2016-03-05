@@ -89,7 +89,7 @@ def delete_module(module_id):
     if len(module) == 0:
         abort(404)
     modules.remove(modules[module_id -1])
-    return jsonify({'result': True})
+    return jsonify({'result': "Success"})
 
 @app.route('/tlaloc/api/v1.0/modules/<int:module_id>/go', methods=['GET'])
 def go_module(module_id):
@@ -104,11 +104,19 @@ def go_module(module_id):
       print("Waiting for confirmation until timeout")
       received = True
       if received:
-        return jsonify({'result': "OK"})
+        return jsonify({'result': "Success"})
       else:
         return jsonify({'result': "Did not received slave confirmation"})
   abort(404)
 
+@app.route('/tlaloc/api/v1.0/listen', methods=['POST'])
+def listen(module_id):
+  print("Launch the process to serve slave command requests...")
+  #set the NRF to listen, when receiving a request treat it accordingly
+  return jsonify({'result': "Succcess"})
+  
+
+
 if __name__ == '__main__':
     app.run(debug=True)
-
+    print("running?")
