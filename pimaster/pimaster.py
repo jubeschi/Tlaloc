@@ -3,6 +3,9 @@ from flask import Flask, jsonify
 from flask import abort, request
 from flask import make_response
 
+from subprocess import Popen
+import time
+
 ##
 ##define the data structure to hold slaves information and status
 ##
@@ -110,12 +113,17 @@ def go_module(module_id):
   abort(404)
 
 @app.route('/tlaloc/api/v1.0/listen', methods=['POST'])
-def listen(module_id):
+def listen():
   print("Launch the process to serve slave command requests...")
-  #set the NRF to listen, when receiving a request treat it accordingly
-  return jsonify({'result': "Succcess"})
-  
-
+  proc=Popen("ls")
+  ##proc=Popen("pimaster-nrf.exe")
+  procId=proc.pid
+  time.sleep(3)
+  procExitCode=proc.poll()
+  if proc.poll() == None:
+    return jsonify({'result': "Succcess"})
+  else:
+    return jsonify({'result': "Error, process returned " + str(procExitCode)})
 
 if __name__ == '__main__':
     app.run(debug=True)
