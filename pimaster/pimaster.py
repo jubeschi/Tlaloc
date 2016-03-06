@@ -5,11 +5,16 @@ from flask import make_response
 
 from subprocess import Popen
 import time
+import json
 
 ##
 ##define the data structure to hold slaves information and status
 ##
 
+data = json.loads(open('tlaloc.json').read())
+print(json.dumps(data))
+
+'''
 modules = [
     {
         'id': 1,
@@ -24,6 +29,7 @@ modules = [
         'watered': False
     }
 ]
+'''
 
 ##
 ##setup the radio communication
@@ -42,7 +48,7 @@ def not_found(error):
 
 @app.route('/tlaloc/api/v1.0/modules', methods=['GET'])
 def get_modules():
-    return jsonify({'modules': modules})
+    return jsonify({'modules': data})
 
 @app.route('/tlaloc/api/v1.0/modules/<int:module_id>', methods=['GET'])
 def get_module(module_id):
@@ -56,12 +62,16 @@ def create_modules():
     if not request.json or not 'name' or not 'seconds' in request.json:
         abort(400)
     module = {
-        'id': modules[-1]['id'] + 1,
+        'id': request.json['id'],
         'name': request.json['name'],
         'seconds': request.json['seconds'],
         'watered': False
     }
-    modules.append(module)
+    data = json.loads(open('tlaloc.json').read())
+    print(data)
+    data['modules'].append(module)
+    file = open('tlaloc.json','w')
+    file.write(json.dumps(data))
     return jsonify({'module': module}), 201
 
 @app.route('/tlaloc/api/v1.0/modules/<int:module_id>', methods=['PUT'])
