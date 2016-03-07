@@ -11,8 +11,11 @@ import json
 ##define the data structure to hold slaves information and status
 ##
 
-data = json.loads(open('tlaloc.json').read())
-print(json.dumps(data))
+#modules = json.loads(open('tlaloc.json').read())
+modules = open('tlaloc.json').read()
+print("Current status is:")
+print(type(modules))
+print(modules)
 
 '''
 modules = [
@@ -48,7 +51,7 @@ def not_found(error):
 
 @app.route('/tlaloc/api/v1.0/modules', methods=['GET'])
 def get_modules():
-    return jsonify({'modules': data})
+    return jsonify({'modules': modules})
 
 @app.route('/tlaloc/api/v1.0/modules/<int:module_id>', methods=['GET'])
 def get_module(module_id):
