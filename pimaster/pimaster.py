@@ -11,11 +11,11 @@ import json
 ##define the data structure to hold slaves information and status
 ##
 
-#modules = json.loads(open('tlaloc.json').read())
-modules = open('tlaloc.json').read()
+data = json.loads(open('tlaloc.json').read())
+#modules = open('tlaloc.json').read()
 print("Current status is:")
-print(type(modules))
-print(modules)
+print(type(data))
+print(data)
 
 '''
 modules = [
@@ -45,17 +45,21 @@ modules = [
 
 app = Flask(__name__)
 
+@app.before_request
+def before_request():
+  data = json.loads(open('tlaloc.json').read())
+
 @app.errorhandler(404)
 def not_found(error):
-    return make_response(jsonify({'error': 'Not found'}), 404)
+  return make_response(jsonify({'error': 'Not found'}), 404)
 
 @app.route('/tlaloc/api/v1.0/modules', methods=['GET'])
 def get_modules():
-    return jsonify({'modules': modules})
+    return jsonify(data)
 
 @app.route('/tlaloc/api/v1.0/modules/<int:module_id>', methods=['GET'])
 def get_module(module_id):
-  for module in modules:
+  for module in data['modules']:
     if module['id'] == module_id:
       return jsonify({'module': module})
   abort(404)
@@ -70,16 +74,13 @@ def create_modules():
         'seconds': request.json['seconds'],
         'watered': False
     }
-    data = json.loads(open('tlaloc.json').read())
-    print(data)
     data['modules'].append(module)
     file = open('tlaloc.json','w')
     file.write(json.dumps(data))
-    return jsonify({'module': module}), 201
+    return jsonify({'module': module})
 
 @app.route('/tlaloc/api/v1.0/modules/<int:module_id>', methods=['PUT'])
 def update_module(module_id):
-    ##module = [module for module in modules if module['id'] == module_id]
     ##do some validation on the input request
     if not request.json:
         abort(400)
@@ -90,7 +91,7 @@ def update_module(module_id):
     if 'watered' in request.json and type(request.json['watered']) is not bool:
         abort(400)
     ##OK, if we are it means the request is good enough
-    for module in modules:
+    for module in data["modules"]:
       if module['id'] == module_id:
         module['name'] = request.json.get('name', module['name'])
         module['seconds'] = request.json.get('seconds', module['seconds'])
@@ -101,15 +102,18 @@ def update_module(module_id):
 
 @app.route('/tlaloc/api/v1.0/modules/<int:module_id>', methods=['DELETE'])
 def delete_module(module_id):
-    module = [module for module in modules if module['id'] == module_id]
-    if len(module) == 0:
-        abort(404)
-    modules.remove(modules[module_id -1])
-    return jsonify({'result': "Success"})
+  for module in data["modules"]:
+    if module['id'] == module_id:
+      data["modules"].remove(module)
+      file = open('tlaloc.json','w')
+      file.write(json.dumps(data))
+      return jsonify({'result': "Success"})
+  #If we are here the input id was not matched
+  abort(404)
 
 @app.route('/tlaloc/api/v1.0/modules/<int:module_id>/go', methods=['GET'])
 def go_module(module_id):
-  for module in modules:
+  for module in data["modules"]:
     if module['id'] == module_id:
       ##prepare the communication with module module_id
       ##TODO
