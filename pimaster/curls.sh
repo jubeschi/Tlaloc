@@ -13,3 +13,7 @@ curl -i http://localhost:5000/tlaloc/api/v1.0/modules
 curl -i -H "Content-Type: application/json" -X DELETE http://localhost:5000/tlaloc/api/v1.0/modules/3
 
 curl -i -H "Content-Type: application/json" -X DELETE http://localhost:5000/tlaloc/api/v1.0/modules/3
+
+curl -i http://localhost:5000/tlaloc/api/v1.0/day
+
+curl -i http://localhost:5000/tlaloc/api/v1.0/current

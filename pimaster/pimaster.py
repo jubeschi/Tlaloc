@@ -7,6 +7,14 @@ from subprocess import Popen
 import time
 import json
 
+from forecastiopy import *
+
+#Define some weather constants
+MEYRIN=[46.228320, 6.070988]
+LATITUDE=MEYRIN[0]
+LONGITUDE=MEYRIN[1]
+MY_APIKEY='7c33572b2f433a8ede9cb0be2062860a'
+
 ##
 ##define the data structure to hold slaves information and status
 ##
@@ -52,6 +60,22 @@ def before_request():
 @app.errorhandler(404)
 def not_found(error):
   return make_response(jsonify({'error': 'Not found'}), 404)
+
+@app.route('/tlaloc/api/v1.0/current', methods=['GET'])
+def get_currentWeather():
+  fio = ForecastIO.ForecastIO(MY_APIKEY,units=ForecastIO.ForecastIO.UNITS_SI,latitude=LATITUDE,longitude=LONGITUDE)
+  current=FIOCurrently.FIOCurrently(fio)
+  return jsonify({'temperature': current.temperature, 'humidity': current.humidity, 'feels like': current.apparentTemperature, '%rain': current.precipProbability})
+  
+@app.route('/tlaloc/api/v1.0/day', methods=['GET'])
+def get_dayWeather():
+  fio = ForecastIO.ForecastIO(MY_APIKEY,units=ForecastIO.ForecastIO.UNITS_SI,latitude=LATITUDE,longitude=LONGITUDE)
+  if fio.has_daily():
+    daily = FIODaily.FIODaily(fio)
+    today = daily.get_day(0)
+    return jsonify({'Min' : today['temperatureMin'], 'Max' : today['temperatureMax']})
+  return jsonify({'error' : 'No Daily data available'})
+
 
 @app.route('/tlaloc/api/v1.0/modules', methods=['GET'])
 def get_modules():
