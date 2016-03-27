@@ -41,3 +41,10 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+#TLALOC all tlaloc file that dont need to be tracked
+=====================================================
+lib/
+venv/
+pimaster/tlaloc.json
+
