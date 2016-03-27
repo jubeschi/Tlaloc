@@ -7,7 +7,7 @@ from subprocess import Popen
 import time
 import json
 
-from forecastiopy import *
+from forecastio import *
 
 #Define some weather constants
 MEYRIN=[46.228320, 6.070988]
