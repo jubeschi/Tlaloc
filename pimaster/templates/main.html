@@ -1,10 +1,55 @@
-<!DOCTYPE html>
+<!doctype html>
+<html lang="en">
+
    <head>
-      <title>{{ title }}</title>
+    <meta charset="utf-8">
+    
+      <title>Tlaloc, the smart irrigator</title>
+      <meta name="description" content="The HTML5 Herald">
+      <meta name="author" content="SitePoint">
+      
+      <link rel="stylesheet" href="css/main.css">
+
    </head>
 
    <body>
-      <h1>Hello, World!</h1>
-      <h2>The date and time on the server is: {{ time }}</h2>
+      <h1>Hello, spare time gardener!</h1>
+
+    <div style="width:510px;color:#000;border:1px solid #F2F2F2;">
+     <iframe height="85" frameborder="0" width="510" scrolling="no" src="http://www.prevision-meteo.ch/services/html/meyrin/horizontal?bg=0000ff&txtcol=F2F2F2&tmpmin=fff000&tmpmax=378ADF"allowtransparency="true"></iframe><a style="text-decoration:none;font-size:0.75em;" title="Détail des prévisions pour Meyrin"href="http://www.prevision-meteo.ch/meteo/localite/meyrin">Prévisions complètes pour Meyrin</a>     
+    </div>
+   
+      <table border="1" style="width:50%">
+          <tr>
+            <td>
+              Module 1</p>
+              Name: {{data['modules'][0]['name']}}<br>
+              Seconds: {{data['modules'][0]['seconds']}}<br>
+              Watered: {{data['modules'][0]['watered']}}<br>
+              Status: {{data['modules'][0]['status']}}<br>
+            </td>
+            <td>
+             Module 2
+             Name: {{data['modules'][1]['name']}}<br>
+              Seconds: {{data['modules'][1]['seconds']}}<br>
+              Watered: {{data['modules'][1]['watered']}}<br>
+              Status: {{data['modules'][1]['status']}}<br>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Module 3</p>
+              Name: {{data['modules'][2]['name']}}<br>
+              Seconds: {{data['modules'][2]['seconds']}}<br>
+              Watered: {{data['modules'][2]['watered']}}<br>
+              Status: {{data['modules'][2]['status']}}<br>
+            </td>
+            <td>
+             
+            </td>
+          </tr>
+    </table> 
+
+   
    </body>
 </html>

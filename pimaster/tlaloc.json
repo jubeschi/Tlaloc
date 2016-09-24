@@ -1,1 +1,1 @@
-"modules" :[{"status": "active", "seconds": 4, "watered": false, "name": "pomodori", "id": 1}, {"status": "active", "seconds": 2, "watered": false, "name": "herbs", "id": 2}, {"seconds": 6, "watered": false, "id": "0", "name": "basilico"}]
+{"modules": [{"status": "ON", "seconds": 2, "id": 2, "name": "herbs", "watered": false}, {"status": "OFF", "seconds": 6, "id": 3, "name": "tomatoes", "watered": false}, {"seconds": 6, "watered": false, "id": 3, "name": "basilic"}]}

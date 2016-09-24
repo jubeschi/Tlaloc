@@ -1,6 +1,9 @@
 //adapted version of the nrf24_reliable_datagram_client-pde
 //from RadioHead library
 
+//TLALOC
+//send a command to the master
+
 #include <RHReliableDatagram.h>
 #include <RH_NRF24.h>
 #include <SPI.h>
@@ -14,8 +17,10 @@ RHReliableDatagram manager(driver, CLIENT_ADDRESS);
 void setup() 
 {
 
-  Serial.println("Setting up RF manager...");
+  delay(5000);
+  
   Serial.begin(9600);
+  Serial.println("Setting up RF manager...");
   if (!manager.init())
     Serial.println("init failed");
   // Defaults after init are 2.402 GHz (channel 2), 2Mbps, 0dBm
@@ -37,6 +42,28 @@ void loop()
   //0 means go back to sleep
   //n means activate the pump for n seconds
   //delay(300000) sleep 5 minutes
+  if (manager.sendtoWait(data, sizeof(data), SERVER_ADDRESS))
+  {
+    // Now wait for a reply from the server
+    uint8_t len = sizeof(buf);
+    uint8_t from;   
+    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
+    {
+      Serial.print("got reply from : 0x");
+      Serial.print(from, HEX);
+      Serial.print(": ");
+      Serial.println((char*)buf);
+    }
+    else
+    {
+      Serial.println("No reply, is nrf24_reliable_datagram_server running?");
+    }
+  }
+  else
+    Serial.println("sendtoWait failed");
+  delay(3000);
+}
+
 
   //Active slave
   //Listen for a command from the master
@@ -44,6 +71,7 @@ void loop()
   //n means activate the pump for n seconds
   //back to lister
 
+/*
 // Server example code
   if (manager.available())
   {
@@ -62,8 +90,13 @@ void loop()
         Serial.println("sendtoWait failed");
     }
   }
+  else
+  {
+    Serial.printl("no data available");
+    delay(3000);
+  }
 }
-
+*/
 
 /* client example code
   // Send a message to manager_server

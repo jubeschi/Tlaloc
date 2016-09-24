@@ -1,13 +1,17 @@
 #!flask/bin/python
+
 from flask import Flask, jsonify
 from flask import abort, request
 from flask import make_response
+from flask import render_template
 
 from subprocess import Popen
+from jsonschema import validate
+
 import time
 import json
 
-from forecastio import *
+##from forecastio import *
 
 #Define some weather constants
 MEYRIN=[46.228320, 6.070988]
@@ -16,31 +20,19 @@ LONGITUDE=MEYRIN[1]
 MY_APIKEY='7c33572b2f433a8ede9cb0be2062860a'
 
 ##
-##define the data structure to hold slaves information and status
+##Load the data from the json file and validate it
 ##
 
 data = json.loads(open('tlaloc.json').read())
+schema = json.loads(open('tlaloc.schema.json').read())
+##validate(data,schema)
+
 #modules = open('tlaloc.json').read()
 print("Current status is:")
+#print("Modules installed: ", data['modules'].length.tostring())
 print(type(data))
 print(data)
 
-'''
-modules = [
-    {
-        'id': 1,
-        'name': u'tomatoes',
-        'seconds': 4, 
-        'watered': False
-    },
-    {
-        'id': 2,
-        'name': u'erbe',
-        'seconds': 2, 
-        'watered': False
-    }
-]
-'''
 
 ##
 ##setup the radio communication
@@ -56,10 +48,17 @@ app = Flask(__name__)
 @app.before_request
 def before_request():
   data = json.loads(open('tlaloc.json').read())
+  schema = json.loads(open('tlaloc.schema.json').read())
+##  validate(data,schema)
 
 @app.errorhandler(404)
 def not_found(error):
   return make_response(jsonify({'error': 'Not found'}), 404)
+
+@app.route('/')
+def hello():
+  return render_template('main.html', data=data)
+
 
 @app.route('/tlaloc/api/v1.0/current', methods=['GET'])
 def get_currentWeather():

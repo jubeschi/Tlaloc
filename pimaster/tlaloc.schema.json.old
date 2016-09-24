@@ -1,0 +1,41 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "modules",
+    "description": "A list of module for Tlaloc",
+    "type": "object",
+    "properties": {
+        "modules": {
+            "type": "array",
+            "items": { 
+                "type" : "object",
+                "properties":
+                {
+                    "id": {
+                        "description": "The unique identifier for a module",
+                        "type": "integer"
+                        },
+                    "status": {
+                        "description": "The ON/OFF status of a module",
+                        "type": "string",
+                        "enum": ["ON","OFF"]
+                        },
+                    "seconds": {
+                        "description": "Duration in seconds of a watering cycle",
+                        "type": "integer",
+                        "minimum": 0
+                        },
+                    "watered": {
+                        "description": "Did the watering cycle on the module succeded?",
+                        "type": "boolean"
+                        },
+                    "name": {
+                        "description": "Name of the module",
+                        "type": "string"
+                        },
+                    "required": ["id","status","seconds","watered","name"]
+                }
+            }
+        }
+     }   
+}
+

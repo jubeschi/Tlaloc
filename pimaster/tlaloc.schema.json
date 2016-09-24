@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "A list of module for Tlaloc",
+  "title": "Tlaloc modules",
+  "type": "object",
+  "properties": {
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string"
+          },
+          "seconds": {
+            "type": "integer"
+          },
+          "watered": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "seconds",
+          "watered",
+          "name"
+        ]
+      }
+    }
+  },
+  "required": [
+    "modules"
+  ]
+}
